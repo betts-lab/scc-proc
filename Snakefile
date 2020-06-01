@@ -22,6 +22,7 @@ rule all:
             smpl = list(map(lambda x: x['name'], config["samples"])),
             i = [x for x in range(0, len(config["samples"]))])
 
+# python script from https://github.com/pachterlab/kite/tree/master/featuremap
 rule build_feature_barcodes:
     input:
         config["files"]["abs_csv"]
@@ -43,14 +44,15 @@ rule make_index:
 
 rule make_bus:
     input:
-        lambda wildcards: map(lambda x : fastq_dir + x, [config["samples"][int(wildcards.i)]["R1"], config["samples"][int(wildcards.i)]["R2"]])
+        fastqs = lambda wildcards: map(lambda x : fastq_dir + x, [config["samples"][int(wildcards.i)]["R1"], config["samples"][int(wildcards.i)]["R2"]]),
+        idx = rules.make_index.output
     output:
         bus = "{smpl}_{i}_output_bus/output.bus"
     params:
         out_dir = "{smpl}_{i}_output_bus/",
         threads = config["general_settings"]["threads"]
     shell:
-        "kallisto bus -x 0,0,29:0,29,37:1,0,0 -i {rules.make_index.output} -t {params.threads} -o {params.out_dir} {input}"
+        "kallisto bus -x 0,0,29:0,29,37:1,0,0 -i {input.idx} -t {params.threads} -o {params.out_dir} {input.fastqs}"
 
 rule correct_cbc:
     input:
