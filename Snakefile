@@ -8,7 +8,7 @@ with open(config_path, 'r') as infile:
     raw_config = yaml.safe_load(infile.read())
 
     fastq_dir = raw_config["dirs"]["fastq_dir"]
-    smpls = list(map(lambda x: x['name'], config["samples"]))
+    smpls = list(map(lambda x: x['name'], raw_config["samples"]))
 
     smpls_with_index = [[x, i] for i,x in enumerate(smpls)]
 
