@@ -8,7 +8,9 @@ with open(config_path, 'r') as infile:
     raw_config = yaml.safe_load(infile.read())
 
     fastq_dir = raw_config["dirs"]["fastq_dir"]
-    # smpls = raw_config["samples"]
+    smpls = list(map(lambda x: x['name'], config["samples"]))
+
+    smpls_with_index = [[x, i] for i,x in enumerate(smpls)]
 
 
 configfile: "config.yaml"
@@ -18,9 +20,8 @@ scripts_dir = "scripts/"
 
 rule all:
     input:
-        expand(f"{{smpl}}_{{i}}_output_count/output.mtx",
-            smpl = list(map(lambda x: x['name'], config["samples"])),
-            i = [x for x in range(0, len(config["samples"]))])
+        expand(f"{{smpl[0]}}_{{smpl[1]}}_output_count/output.mtx",
+            smpl = smpls_with_index)
 
 # python script from https://github.com/pachterlab/kite/tree/master/featuremap
 rule build_feature_barcodes:
