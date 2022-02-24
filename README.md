@@ -40,8 +40,8 @@ CD48,CTACGACGTAGAAGA
 CD21,AACCTAGTAGTTCGG
 ```
 
-### 4) Whitelist cell barcode file
-> Whitelisted cell barcode per line. Example below:
+### 4) Allowlist cell barcode file
+> Allowlist cell barcode per line. Example below:
 
 ```
 GTCTGCTATGTCTA

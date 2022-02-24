@@ -61,9 +61,9 @@ rule correct_cbc:
     output:
         rules.make_bus.params.out_dir + "output.corrected.bus"
     params:
-        whitelist = config["files"]["whitelist"]
+        allowlist = config["files"]["allowlist"]
     shell:
-        "bustools correct -w {params.whitelist} -o {output} {input} "
+        "bustools correct -w {params.allowlist} -o {output} {input} "
 
 rule sort_bus:
     input:
