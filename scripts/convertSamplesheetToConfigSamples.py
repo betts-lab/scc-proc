@@ -1,17 +1,21 @@
 import argparse
 import csv
 import os.path
+import re
+
 
 def generateSample(s_adt, s_hto):
-  s = s_adt["sample"]
+  adt_sn = s_adt["sample"]
+  hto_sn= s_hto["sample"]
   adt_n = s_adt["sample_n"]
   hto_n = s_hto["sample_n"]
-
+  
+  s = adt_sn.replace("_ADT", "") 
 
   sample = f'''\
     - name: {s}
-      adt_fastqs: ["{s}_S{adt_n}_R1_001.fastq.gz", "{s}_S{adt_n}_R3_001.fastq.gz"]
-      hto_fastqs: ["{s}_S{hto_n}_R1_001.fastq.gz", "{s}_S{hto_n}_R3_001.fastq.gz"]'''
+      adt_fastqs: ["{adt_sn}_S{adt_n}_R1_001.fastq.gz", "{adt_sn}_S{adt_n}_R3_001.fastq.gz"]
+      hto_fastqs: ["{hto_sn}_S{hto_n}_R1_001.fastq.gz", "{hto_sn}_S{hto_n}_R3_001.fastq.gz"]'''
   
   return(sample)
 
