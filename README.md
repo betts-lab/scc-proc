@@ -6,7 +6,6 @@ Upstream processing for single cell ADT-based sequencing (including hashtags)
 ### 1) `config.yaml` file
 Example configuration is shown below.
 
-- This file must be at the same level as the `Snakefile`.
 - Multiple samples can be added to the config assuming they follow the same antibody mixture and bead setup.
 - All fastq files must be in the fastq_dir path
     - Specific filenames are provided in the `samples` attribute of the yaml file that correspond to ADT or HTO files
@@ -61,7 +60,7 @@ conda create --name <env> --file environment_osx.txt
 
 2. Run Snakemake
 ```
-snakemake --cores 4
+snakemake --cores 4 -s <path-to-Snakefile> --configfile=<path-to-config-yaml>
 ```
 The overall process will look like this:
 

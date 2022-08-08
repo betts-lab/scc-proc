@@ -3,37 +3,37 @@ import os
 import re
 import sys
 
-config_path = 'config.yaml'
-configfile: config_path
+#config_path = 'config.yaml'
+#configfile: config_path
 
-with open(config_path, 'r') as infile:
-  raw_config = yaml.safe_load(infile.read())
+#with open(configfile, 'r') as infile:
+  #raw_config = yaml.safe_load(infile.read())
 
-  fastqDir = os.path.normpath(raw_config["dirs"]["fastq_dir"])
-  smplsNames = raw_config["samples"]
+fastqDir = os.path.normpath(config["dirs"]["fastq_dir"])
+smplsNames = config["samples"]
 
-  smplDict = {}
-  for s in raw_config["samples"]:
-    smplDict[s["name"]] = s
-  
+smplDict = {}
+for s in config["samples"]:
+  smplDict[s["name"]] = s
 
-  modalities = raw_config["general_settings"]["modes"]
-  outDir = os.path.normpath(raw_config["dirs"]["out_dir"])
-  tmpDir = outDir + "/" + "kallisto_tmp"
-  
-  if not os.path.exists(outDir):
-    os.mkdir(outDir)
-  
-  if not os.path.exists(tmpDir):
-    os.mkdir(tmpDir)
-  
+
+modalities = config["general_settings"]["modes"]
+outDir = os.path.normpath(config["dirs"]["out_dir"])
+tmpDir = outDir + "/" + "kallisto_tmp"
+
+if not os.path.exists(outDir):
+  os.mkdir(outDir)
+
+if not os.path.exists(tmpDir):
+  os.mkdir(tmpDir)
+
 #   for m in modalities:
 #     for s in smplsNames:
 #       finalDir = "{}/{}_{}_output_count".format(outDir, s, m)
 #       if not os.path.exists(finalDir):
 #         os.mkdir(finalDir)
 # 
-  scripts_dir = os.path.realpath(workflow.basedir) + "/scripts"
+scripts_dir = os.path.realpath(workflow.basedir) + "/scripts"
 
 rule all:
   input:
@@ -44,7 +44,7 @@ rule all:
 
 def get_modalities_catalogs(wildcards):
   modalityKey = wildcards.modality + "_catalog"
-  return(raw_config["files"][modalityKey])
+  return(config["files"][modalityKey])
 
 # python script from https://github.com/pachterlab/kite/tree/master/featuremap
 rule build_preIndex:
@@ -65,7 +65,7 @@ rule make_index:
   output:
     tmpDir + "/{modality}.idx"
   params:
-    kmer = raw_config["general_settings"]["tag"][2] - raw_config["general_settings"]["tag"][1]
+    kmer = config["general_settings"]["tag"][2] - config["general_settings"]["tag"][1]
   shell:
     "kallisto index -i {output} -k {params.kmer} {input}"
 
@@ -88,9 +88,9 @@ rule make_bus:
   output:
     bus = outDir + "/{smpl}_{modality}_output_bus/output.bus"
   params:
-    cbc = convert_list_to_bus_params(raw_config["general_settings"]["cbc"]),
-    umi = convert_list_to_bus_params(raw_config["general_settings"]["umi"]),
-    tag = convert_list_to_bus_params(raw_config["general_settings"]["tag"]),
+    cbc = convert_list_to_bus_params(config["general_settings"]["cbc"]),
+    umi = convert_list_to_bus_params(config["general_settings"]["umi"]),
+    tag = convert_list_to_bus_params(config["general_settings"]["tag"]),
     out_dir = outDir + "/{smpl}_{modality}_output_bus/",
     threads = config["general_settings"]["threads"]
   shell:

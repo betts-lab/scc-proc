@@ -41,7 +41,7 @@ def main(args):
         samples.append(row[0])
 
 
-  samples = [{"sample": s, "sample_n": i} for i,s in enumerate(samples)]
+  samples = [{"sample": s, "sample_n": i + 1} for i,s in enumerate(samples)]
   samples = sorted(samples, key = lambda x: x["sample"])
   
   for i in range(0, len(samples), 2):
