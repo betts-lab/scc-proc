@@ -11,6 +11,7 @@ def generateSample(s_adt, s_hto):
   hto_n = s_hto["sample_n"]
   
   s = adt_sn.replace("_ADT", "") 
+  s = s.rstrip("_")
 
   sample = f'''\
     - name: {s}
