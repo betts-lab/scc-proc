@@ -14,7 +14,7 @@ smplsNames = config["samples"]
 
 smplDict = {}
 for s in config["samples"]:
-  smplDict[s["name"]] = s
+  smplDict[str(s["name"])] = s
 
 
 modalities = config["general_settings"]["modes"]
@@ -72,11 +72,15 @@ rule make_index:
 
 def get_sample_fastqs(wildcards):
   modalityKey = wildcards.modality + "_" + "fastqs"
+  print(smplDict)
+
   inputs = {
     "fastqs": [fastqDir + "/" + x for x in smplDict[wildcards.smpl][modalityKey]],
     "idx": tmpDir + "/" + wildcards.modality + ".idx"
   }
   
+  print(str(inputs))
+
   return(inputs)
 
 def convert_list_to_bus_params(l):
